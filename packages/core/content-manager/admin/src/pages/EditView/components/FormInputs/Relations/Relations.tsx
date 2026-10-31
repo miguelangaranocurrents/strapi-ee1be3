@@ -750,9 +750,15 @@ const RelationModalWithContext = ({
 
   const options = data?.results ?? [];
 
-  React.useLayoutEffect(() => {
+  /**
+   * After a selection the combobox writes the selected option's label into its input, which
+   * would then be used as the search (and filter the remaining options out). Clear both once the
+   * combobox has finished its own effects, so the next open lists every available relation.
+   */
+  React.useEffect(() => {
     setTextValue('');
-  }, [fieldValue]);
+    setSearchParams((s) => ({ ...s, _q: '', page: 1 }));
+  }, [fieldValue, setSearchParams]);
 
   const handleSearch = async (search: string) => {
     setSearchParams((s) => ({ ...s, _q: search, page: 1 }));
